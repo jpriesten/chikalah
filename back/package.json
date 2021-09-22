@@ -10,10 +10,11 @@
     "dev": "nodemon server.js"
   },
   "keywords": [
-    "job",
-    "unskilled labourers",
-    "employers",
-    "one click"
+    "Period tracker",
+    "Blood",
+    "Women",
+    "one click",
+    "Chika box"
   ],
   "author": "TjeY",
   "license": "ISC",

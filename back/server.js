@@ -4,7 +4,6 @@ const mongoose = require("mongoose");
 const swaggerUi = require("swagger-ui-express");
 const swaggerDocument = require("./swagger.json");
 const logger = require("./app/logging/logs");
-const response = require("./app/common/response.common");
 const dotenv = require("dotenv");
 const cors = require("cors");
 
@@ -48,7 +47,7 @@ app.use(cors(corsOptions));
 
 // define a simple route
 app.get("/", (req, res) => {
-  res.json({ message: "Welcome to bholo server application." });
+  res.json({ message: "Welcome to chikalah server application." });
 });
 
 // API documentation

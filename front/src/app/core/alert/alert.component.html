@@ -1,8 +1,0 @@
-<div *ngIf="message"
-  [ngClass]="{ 'alert': message.text, 'alert-success': message.type === 'success', 'alert-danger': message.type === 'error' }">
-  {{message.text}}
-  <a *ngIf="message.text"
-    [ngClass]="{ 'alert btn pull-right': message.text, 'alert-success': message.type === 'success', 'alert-danger': message.type === 'error' }"
-    style="position:relative; bottom:15px; border:none" (click)="close()"><span class="fa fa-remove"></span>&nbsp;<span
-      data-i18n="alert.dismiss">Dismiss</span></a>
-</div>

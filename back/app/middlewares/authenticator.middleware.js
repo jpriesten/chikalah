@@ -21,7 +21,7 @@ const auth = async (req, res, next) => {
       req.user = user;
       next();
     } catch (error) {
-      if (error.message == "connection timed out")
+      if (error.message === "connection timed out")
         response.errorResponse(res, 500, error.message, error.code);
       else
         response.errorResponse(

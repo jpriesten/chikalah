@@ -25,9 +25,9 @@ module.exports = {
       );
       const url = `http://localhost:3000/api/v1/user/register/confirmEmail/?token=${token}`;
       const res = await transport.sendMail({
-        from: "priestenjezeh@bholo.com",
+        from: "priestenjezeh@chikalah.com",
         to: `${user.email}`,
-        subject: "Confirmation Email from Bholo",
+        subject: "Confirmation Email from Chikalah",
         html: `Hi ${user.firstname}, Confirmation Link: <a href=${url}> ${url}</a>`,
       });
       console.log("Message delivered: ", res);
