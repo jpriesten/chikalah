@@ -179,22 +179,18 @@ UserSchema.methods.newAuthToken = async function () {
         user.tokens = user.tokens.concat({token});
 
         // Save user if email verification code sent
-        console.log("Sending verify email code");
-        const savedUser = await user.save();
-        console.log("User saved: ", savedUser);
+        await user.save();
         const emailSent = await emailService.sendConfirmationEmail(user);
         if (emailSent.error === true) {
-            console.log("Email not sent: ", emailSent);
             return {
                 error: true,
                 detail: {
                     message: emailSent.detail.message,
                     code: emailSent.detail.code,
-                    extra: "Failed to save user, verification email not sent",
+                    extra: "Verification email not sent",
                 },
             };
         } else {
-            console.log("Email sent: ", emailSent);
             return {error: false, token, user};
         }
     } catch (error) {
