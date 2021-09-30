@@ -28,7 +28,7 @@ module.exports = {
                 from: "priestenjezeh@chikalah.com",
                 to: `${user.email}`,
                 subject: "Confirmation Email from Chikalah",
-                html: `Hi ${user.firstname}, Confirmation Link: <a href=${url}> ${url}</a>`,
+                html: `Hi ${user.firstname}, Confirmation Link: <a href=${url}> here</a>`,
             });
             return {error: false, response: res};
         } catch (error) {

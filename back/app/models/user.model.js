@@ -39,8 +39,7 @@ const UserSchema = mongoose.Schema(
         userType: {
             type: UserType,
             // required: true,
-            defaults: "user",
-            trim: true,
+            default: UserType.User,
         },
         sex: {
             type: GenderType,
@@ -96,11 +95,11 @@ const UserSchema = mongoose.Schema(
         },
         emailActive: {
             type: Boolean,
-            defaults: false,
+            default: false,
         },
         phoneActive: {
             type: Boolean,
-            defaults: false,
+            default: false,
         },
         tokens: [
             {
@@ -154,6 +153,13 @@ UserSchema.methods.checkValidCredentials = async (email, password) => {
         if (!user) {
             throw new Error("User " + email + " not found");
         }
+        if (user.emailActive === false) {
+            const emailSent = await emailService.sendConfirmationEmail(user);
+            if (emailSent.error === true) {
+                throw new Error('Verification email not sent');
+            }
+            throw new Error('Verify email. Verification link resent!');
+        }
 
         let isMatch = await bcrypt.compare(password, user.password);
 
@@ -164,7 +170,10 @@ UserSchema.methods.checkValidCredentials = async (email, password) => {
     } catch (error) {
         return {
             error: true,
-            detail: {message: error.message, code: error.code},
+            detail: {
+                message: error.message,
+                code: error.message.includes('Verify email') ? 5489 : error.code
+            },
         };
     }
 };
@@ -185,9 +194,9 @@ UserSchema.methods.newAuthToken = async function () {
             return {
                 error: true,
                 detail: {
-                    message: emailSent.detail.message,
+                    message: "Verification email not sent",
                     code: emailSent.detail.code,
-                    extra: "Verification email not sent",
+                    extra: emailSent.detail.message,
                 },
             };
         } else {

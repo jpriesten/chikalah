@@ -22,7 +22,7 @@ const auth = async (req, res, next) => {
       next();
     } catch (error) {
       if (error.message === "connection timed out")
-        response.errorResponse(res, 500, error.message, error.code);
+        response.errorResponse(res, 408, error.message, error.code);
       else
         response.errorResponse(
           res,
@@ -33,7 +33,7 @@ const auth = async (req, res, next) => {
         );
     }
   } else {
-    response.errorResponse(res, 500, "Missing authorization code", 50000);
+    response.errorResponse(res, 404, "Missing authorization code", 40444);
   }
 };
 

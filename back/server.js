@@ -24,7 +24,7 @@ mongoose.Promise = global.Promise;
 mongoose
     .connect(process.env.DB_CONNECT, {
         useNewUrlParser: true,
-        useUnifiedTopology: true, useCreateIndex: true
+        useUnifiedTopology: true, useCreateIndex: false
     })
     .then(() => {
         console.log("Successfully connected to the database");
@@ -38,7 +38,7 @@ app.use(logger.requestLogger);
 
 // Enable CORS globally
 const corsOptions = {
-    origin: "2344",
+    origin: "*",
     allowedHeaders:
         "Content-Type,X-Amz-Date,Authorization,X-Api-Key,Origin,Accept,Access-Control-Allow-Headers,Access-Control-Allow-Methods,Access-Control-Allow-Origin",
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",

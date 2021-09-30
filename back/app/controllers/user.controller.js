@@ -30,7 +30,7 @@ exports.register = (req, res) => {
                     );
                 } else if (token.error === false) {
                     response.successResponse(res, 201, [
-                        {token: token.token, user: token.user},
+                        {message: 'User created'},
                     ]);
                 }
             } catch (error) {
@@ -95,6 +95,15 @@ exports.confirmEmail = async (req, res) => {
 // Login a user
 exports.login = async (req, res) => {
     // Get user information from request
+    if (Object.keys(req.body).length === 0) {
+        return response.errorResponse(res, 404, "No data sent", 40004);
+    }
+    const user = new User(core.objectValuesToLowerCase(req.body));
+    if (!user.get("email"))
+        return response.errorResponse(res, 404, "Missing required field 'email", 40004);
+    else if (!user.get("password"))
+        return response.errorResponse(res, 404, "Missing required field 'password", 40004);
+
     const requestUser = new User(req.body);
     try {
         let user = await requestUser.checkValidCredentials(
