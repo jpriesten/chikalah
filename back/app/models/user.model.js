@@ -4,18 +4,9 @@ const validator = require("validator");
 const jwt = require("jsonwebtoken");
 
 const emailService = require("../services/email.service");
+const {UserType, GenderType, ProductStatus} = require("../common/enum.common");
 
 const salt = bcrypt.genSaltSync(10);
-
-const UserType = Object.freeze({
-    Admin: "admin",
-    User: "user",
-});
-
-const GenderType = Object.freeze({
-    Male: "m",
-    Female: "f",
-});
 
 const UserSchema = mongoose.Schema(
     {
@@ -37,13 +28,15 @@ const UserSchema = mongoose.Schema(
             trim: true,
         },
         userType: {
-            type: UserType,
-            // required: true,
+            type: String,
+            required: true,
+            enum: UserType,
             default: UserType.User,
         },
         sex: {
-            type: GenderType,
+            type: String,
             // required: true,
+            enum: GenderType,
             trim: true,
             minlength: 1,
         },

@@ -24,14 +24,13 @@ mongoose.Promise = global.Promise;
 mongoose
     .connect(process.env.DB_CONNECT, {
         useNewUrlParser: true,
-        useUnifiedTopology: true, useCreateIndex: false
+        useUnifiedTopology: true, useCreateIndex: true
     })
     .then(() => {
         console.log("Successfully connected to the database");
     })
     .catch((error) => {
         console.log("Could not connect to the database. Exiting now...", error);
-        // process.exit();
     });
 
 app.use(logger.requestLogger);
@@ -53,10 +52,16 @@ app.get("/", (req, res) => {
 // API documentation
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
+// Auth routes
+require("./app/routes/auth.routes")(app);
 // User routes
 require("./app/routes/user.routes")(app);
-// post routes
-require("./app/routes/post.routes")(app);
+// Product routes
+require("./app/routes/product.routes")(app);
+// Product category routes
+require("./app/routes/product-category.routes")(app);
+// Cart routes
+require("./app/routes/cart.routes")(app);
 
 app.use(logger.errorLogger);
 // listen for requests
