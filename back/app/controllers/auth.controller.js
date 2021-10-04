@@ -6,7 +6,7 @@ const core = require("../common/core.common");
 exports.register = (req, res) => {
     // Get user information from request
     if (Object.keys(req.body).length === 0) {
-        return response.errorResponse(res, 404, "No data sent", 40004);
+        return response.errorResponse(res, 400, "No data sent", 40000);
     }
     const user = new User(core.objectValuesToLowerCase(req.body));
     if (!user.get("firstname"))

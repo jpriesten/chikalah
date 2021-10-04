@@ -62,6 +62,8 @@ require("./app/routes/product.routes")(app);
 require("./app/routes/product-category.routes")(app);
 // Cart routes
 require("./app/routes/cart.routes")(app);
+// Phone number management routes
+require("./app/routes/phone.routes")(app);
 
 app.use(logger.errorLogger);
 // listen for requests

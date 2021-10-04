@@ -6,15 +6,13 @@ const core = require("../common/core.common");
 exports.add = async (req, res) => {
     // Get user information from request
     if (Object.keys(req.body).length === 0) {
-        return response.errorResponse(res, 404, "No data sent", 40004);
+        return response.errorResponse(res, 400, "No data sent", 40000);
     }
     const product = new Product(core.objectValuesToLowerCase(req.body));
     if (!product.get("name"))
         return response.errorResponse(res, 404, "Missing required field 'name'", 40004);
     else if (!product.get("description"))
         return response.errorResponse(res, 404, "Missing required field 'description'", 40004);
-    else if (!product.get("status"))
-        return response.errorResponse(res, 404, "Missing required field 'status'", 40004);
     else if (!product.get("currency"))
         return response.errorResponse(res, 404, "Missing required field 'currency'", 40004);
     else if (!product.get("price"))
@@ -28,7 +26,7 @@ exports.add = async (req, res) => {
     } catch (error) {
         console.error("Error adding product: ", error);
         if (error?.code === 11000)
-            response.errorResponse(res, 500, "Product already exists", error.code);
+            response.errorResponse(res, 409, "Product already exists", error.code);
         response.errorResponse(res, 500, error.message, error.code);
     }
 };
@@ -45,8 +43,8 @@ exports.findAll = async (req, res) => {
             if (!core.isEmptyOrNull(core.getQueryParameter(req.query, "categoryID"))) {
                 params["categoryID"] = core.getQueryParameter(req.query, "categoryID");
             }
-            if (!core.isEmptyOrNull(core.getQueryParameter(req.query, "status"))) {
-                params["status"] = core.getQueryParameter(req.query, "status");
+            if (!core.isEmptyOrNull(core.getQueryParameter(req.query, "isActive"))) {
+                params["isActive"] = core.getQueryParameter(req.query, "isActive");
             }
             if (!core.isEmptyOrNull(core.getQueryParameter(req.query, "price"))) {
                 params["price"] = core.getQueryParameter(req.query, "price");
@@ -70,7 +68,7 @@ exports.findOne = async (req, res) => {
             const foundProduct = await Product.findById(query.id);
             if (core.isEmptyOrNull(foundProduct))
                 response.errorResponse(res, 404, "Product not found", 40004);
-            else response.successResponse(res, 200, [{product: foundProduct, query}]);
+            else response.successResponse(res, 200, [{product: foundProduct}]);
         } catch (error) {
             response.errorResponse(res, 500, error.message, error.code);
         }

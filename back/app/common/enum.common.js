@@ -7,10 +7,11 @@ module.exports = {
     GenderType: Object.freeze({
         Male: "m",
         Female: "f",
+        Default: ""
     }),
 
     Currencies: Object.freeze({
-        Cameroon: "XAF",
-        Nigeria: "NGN",
+        Cameroon: "xaf",
+        Nigeria: "ngn",
     }),
 }

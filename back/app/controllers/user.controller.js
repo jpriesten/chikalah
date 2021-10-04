@@ -57,7 +57,7 @@ exports.findOne = async (req, res) => {
                 const foundUser = await User.findById(query.id);
                 if (core.isEmptyOrNull(foundUser))
                     response.errorResponse(res, 404, "User not found", 40004);
-                else response.successResponse(res, 200, [{user: foundUser, query}]);
+                else response.successResponse(res, 200, [{user: foundUser}]);
             } catch (error) {
                 response.errorResponse(res, 500, error.message, error.code);
             }

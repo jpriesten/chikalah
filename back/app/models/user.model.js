@@ -17,14 +17,7 @@ const UserSchema = mongoose.Schema(
         },
         othernames: {
             type: String,
-            // required: true,
-            trim: true,
-        },
-        phone: {
-            type: String,
-            // required: [true, "Please add a phone number"],
-            unique: true,
-            match: [/^\+(?:[0-9] ?){6,14}[0-9]$/, "Please add a valid phone number"],
+            default: "",
             trim: true,
         },
         userType: {
@@ -35,29 +28,29 @@ const UserSchema = mongoose.Schema(
         },
         sex: {
             type: String,
-            // required: true,
+            default: GenderType.Default,
             enum: GenderType,
             trim: true,
             minlength: 1,
         },
         dob: {
             type: Date,
-            // required: true,
+            default: "",
             trim: true,
         },
         address: {
             type: String,
             trim: true,
-            // required: true,
+            default: "",
         },
         country: {
             type: String,
-            // required: true,
+            default: "",
             trim: true,
         },
         city: {
             type: String,
-            // required: true,
+            default: "",
             trim: true,
         },
         email: {
@@ -90,10 +83,6 @@ const UserSchema = mongoose.Schema(
             type: Boolean,
             default: false,
         },
-        phoneActive: {
-            type: Boolean,
-            default: false,
-        },
         tokens: [
             {
                 token: {
@@ -102,10 +91,6 @@ const UserSchema = mongoose.Schema(
                 },
             },
         ],
-        createdAt: {
-            type: Date,
-            defaults: new Date(Date.now() + 60 * 60 * 1000),
-        },
     },
     {
         timestamps: true,

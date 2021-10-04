@@ -6,7 +6,7 @@ const core = require("../common/core.common");
 exports.add = async (req, res) => {
     // Get user information from request
     if (Object.keys(req.body).length === 0) {
-        return response.errorResponse(res, 404, "No data sent", 40004);
+        return response.errorResponse(res, 400, "No data sent", 40000);
     }
     const cart = new Cart(core.objectValuesToLowerCase(req.body));
     if (!cart.get("userID"))
@@ -27,9 +27,8 @@ exports.add = async (req, res) => {
         let savedItem = await cart.save();
         response.successResponse(res, 201, [{item: savedItem}]);
     } catch (error) {
-        console.error("Error adding cart: ", error);
         if (error?.code === 11000)
-            response.errorResponse(res, 500, "Item already exists", error.code);
+            response.errorResponse(res, 409, "Item already exists", error.code);
         response.errorResponse(res, 500, error.message, error.code);
     }
 };
@@ -56,7 +55,7 @@ exports.findOne = async (req, res) => {
             const foundItem = await Cart.findById(query.id);
             if (core.isEmptyOrNull(foundItem))
                 response.errorResponse(res, 404, "Cart item not found", 40004);
-            else response.successResponse(res, 200, [{item: foundItem, query}]);
+            else response.successResponse(res, 200, [{item: foundItem}]);
         } catch (error) {
             response.errorResponse(res, 500, error.message, error.code);
         }
@@ -122,34 +121,6 @@ exports.update = async (req, res) => {
         }
         response.errorResponse(res, 500, error.message, error.code);
     }
-
-    // Cart.findOneAndUpdate({_id: params["id"]}, params, {
-    //     new: true,
-    //     useFindAndModify: false,
-    // })
-    //     .then((updatedItem) => {
-    //         if (!updatedItem) {
-    //             return response.errorResponse(
-    //                 res,
-    //                 404,
-    //                 `Cart not found with id: ${params["id"]}`,
-    //                 40004
-    //             );
-    //         }
-    //         response.successResponse(res, 200, [{item: updatedItem}]);
-    //     })
-    //     .catch((error) => {
-    //         if (error.kind === "ObjectId") {
-    //             return response.errorResponse(
-    //                 res,
-    //                 404,
-    //                 `Cart not found with id: ${params["id"]}`,
-    //                 error.code,
-    //                 error.message
-    //             );
-    //         }
-    //         return response.errorResponse(res, 500, error.message, error.code);
-    //     });
 };
 
 // Delete a cart item category with the specified item Id

@@ -6,7 +6,7 @@ const core = require("../common/core.common");
 exports.add = async (req, res) => {
     // Get user information from request
     if (Object.keys(req.body).length === 0) {
-        return response.errorResponse(res, 404, "No data sent", 40004);
+        return response.errorResponse(res, 400, "No data sent", 40000);
     }
     const productCategory = new ProductCategory(core.objectValuesToLowerCase(req.body));
     if (!productCategory.get("name"))
@@ -20,7 +20,7 @@ exports.add = async (req, res) => {
     } catch (error) {
         console.error("Error adding product category: ", error);
         if (error?.code === 11000)
-            response.errorResponse(res, 500, "Product category already exists", error.code);
+            response.errorResponse(res, 409, "Product category already exists", error.code);
         response.errorResponse(res, 500, error.message, error.code);
     }
 };
