@@ -1,9 +1,9 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const mongoose = require("mongoose");
 const swaggerUi = require("swagger-ui-express");
 const swaggerDocument = require("./swagger.json");
 const logger = require("./app/logging/logs");
+const database = require("./app/services/database.service");
 const dotenv = require("dotenv");
 const cors = require("cors");
 
@@ -17,15 +17,8 @@ app.use(bodyParser.urlencoded({extended: true}));
 // parse requests of content-type - application/json
 app.use(bodyParser.json());
 
-// Configuring the database
-mongoose.Promise = global.Promise;
-
 // Connecting to the database
-mongoose
-    .connect(process.env.DB_CONNECT, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true, useCreateIndex: true
-    })
+database.openConnection()
     .then(() => {
         console.log("Successfully connected to the database");
     })
@@ -64,6 +57,8 @@ require("./app/routes/product-category.routes")(app);
 require("./app/routes/cart.routes")(app);
 // Phone number management routes
 require("./app/routes/phone.routes")(app);
+// Demographic data routes
+require("./app/routes/demography.routes")(app);
 
 app.use(logger.errorLogger);
 // listen for requests
