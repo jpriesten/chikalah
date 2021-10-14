@@ -9,9 +9,9 @@ const PhoneSchema = mongoose.Schema(
         },
         phone: {
             type: String,
-            required: [true, "Please add a phone number"],
+            required: [true, "Missing required field 'phone'"],
             unique: true,
-            match: [/^\+(?:[0-9] ?){6,14}[0-9]$/, "Please add a valid phone number"],
+            match: [/^(?:[0-9] ?){6,14}[0-9]$/, "Please add a valid phone number"],
             trim: true,
         },
         description: {

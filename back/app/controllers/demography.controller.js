@@ -60,11 +60,12 @@ exports.findCountry = async (req, res) => {
 // Retrieve and return all cities in a country.
 exports.findCities = async (req, res) => {
     // Validate Request
-    if (core.isEmptyOrNull(core.getQueryParameter(req.query, "state_code")) &&
-        core.isEmptyOrNull(core.getQueryParameter(req.query, "country_iso2"))
+    if (core.isEmptyOrNull(core.getQueryParameter(req.query, "state_alias")) &&
+        core.isEmptyOrNull(core.getQueryParameter(req.query, "country_iso2")) &&
+        core.isEmptyOrNull(core.getQueryParameter(req.query, "name"))
     ) {
         return response.errorResponse(res, 400,
-            "Missing required field 'state_code' or 'country_iso2'", 40000);
+            "Missing required field 'state_alias' or 'country_iso2' or 'name'", 40000);
     }
     // Get request query parameters.
     try {
@@ -73,11 +74,14 @@ exports.findCities = async (req, res) => {
         else {
             let params = {};
             req.query = core.objectValuesToLowerCase(req.query);
-            if (!core.isEmptyOrNull(core.getQueryParameter(req.query, "state_code"))) {
-                params["state_code"] = {$regex: core.getQueryParameter(req.query, "state_code"), $options: 'i'};
+            if (!core.isEmptyOrNull(core.getQueryParameter(req.query, "state_alias"))) {
+                params["state_alias"] = {$regex: core.getQueryParameter(req.query, "state_alias"), $options: 'i'};
             }
             if (!core.isEmptyOrNull(core.getQueryParameter(req.query, "country_iso2"))) {
                 params["country_iso2"] = {$regex: core.getQueryParameter(req.query, "country_iso2"), $options: 'i'};
+            }
+            if (!core.isEmptyOrNull(core.getQueryParameter(req.query, "name"))) {
+                params["name"] = {$regex: core.getQueryParameter(req.query, "name"), $options: 'i'};
             }
             cities = await City.find(params);
         }

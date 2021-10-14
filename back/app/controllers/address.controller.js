@@ -1,37 +1,36 @@
-const Phone = require("../models/phone.model");
+const Address = require("../models/address.model");
 const response = require("../common/response.common");
 const core = require("../common/core.common");
+
 const {UserType} = require("../common/enum.common");
 
-// Add a new phone number
+// Add a new address
 exports.add = async (req, res) => {
     // Get user information from request
     if (Object.keys(req.body).length === 0) {
         return response.errorResponse(res, 400, "No data sent", 40000);
     }
     req.body.userID = req.user._id;
-    const phone = new Phone(core.objectValuesToLowerCase(req.body));
+    const address = new Address(core.objectValuesToLowerCase(req.body));
     try {
-        await core.verifyRequestData(phone);
-        await phone.save();
+        await core.verifyRequestData(address);
+        await address.save();
         response.successResponse(res, 201, [{'message': 'Okay'}]);
     } catch (error) {
-        if (error?.code === 11000)
-            return response.errorResponse(res, 409, "Phone number already exists", error.code);
         response.errorResponse(res, error.statusCode || 500, error.value.message, error.value.code);
     }
 };
 
-// Retrieve and return all phone numbers from the database.
+// Retrieve and return all addresses from the database.
 exports.findAll = async (req, res) => {
     // Get user object
     let user = req.user;
     try {
-        let tels;
+        let addresses;
         if (Object.keys(req.query).length === 0) {
             if (user.userType === UserType.Admin)
-                tels = await Phone.find();
-            else tels = await Phone.find({userID: user._id});
+                addresses = await Address.find();
+            else addresses = await Address.find({userID: user._id});
         } else {
             let params = {};
             req.query = core.objectValuesToLowerCase(req.query);
@@ -41,26 +40,25 @@ exports.findAll = async (req, res) => {
             if (!core.isEmptyOrNull(core.getQueryParameter(req.query, "isActive"))) {
                 params["isActive"] = core.getQueryParameter(req.query, "isActive");
             }
-            tels = await Phone.find(params);
+            addresses = await Address.find(params);
         }
         response.successResponse(res, 200, [
-            {count: Object.keys(tels).length, tels},
+            {count: Object.keys(addresses).length, addresses},
         ]);
     } catch (error) {
         response.errorResponse(res, 500, error.message, error.code);
     }
 };
 
-// Get details of a phone number
+// Get details of an address
 exports.findOne = async (req, res) => {
-    // Get user by ID
     const query = new Object(req.query);
     if (query.hasOwnProperty("id") && !core.isEmptyOrNull(query.id)) {
         try {
-            const found = await Phone.findById(query.id);
+            const found = await Address.findById(query.id);
             if (core.isEmptyOrNull(found))
-                response.errorResponse(res, 404, "Phone number not found", 40004);
-            else response.successResponse(res, 200, [{tel: found}]);
+                response.errorResponse(res, 404, "Address not found", 40004);
+            else response.successResponse(res, 200, [{address: found}]);
         } catch (error) {
             response.errorResponse(res, 500, error.message, error.code);
         }
@@ -79,9 +77,9 @@ exports.update = async (req, res) => {
     ) {
         return response.errorResponse(res, 400, "Missing required field 'id'", 40000);
     }
-    if (core.isEmptyOrNull(req.body.phone) &&
-        core.isEmptyOrNull(req.body.description) &&
-        core.isEmptyOrNull(req.body.isActive) &&
+    if (core.isEmptyOrNull(req.body.country_code) && core.isEmptyOrNull(req.body.state_code) &&
+        core.isEmptyOrNull(req.body.city_code) && core.isEmptyOrNull(req.body.addressLine_1) &&
+        core.isEmptyOrNull(req.body.addressLine_2) && core.isEmptyOrNull(req.body.isActive) &&
         core.isEmptyOrNull(req.body.isPreferred)
     ) {
         return response.errorResponse(res, 400, "No record was modified", 40000);
@@ -92,11 +90,20 @@ exports.update = async (req, res) => {
     if (!core.isEmptyOrNull(req.body.id)) {
         params["id"] = req.body.id;
     }
-    if (!core.isEmptyOrNull(req.body.phone)) {
-        params["phone"] = req.body.phone;
+    if (!core.isEmptyOrNull(req.body.countryID)) {
+        params["countryID"] = req.body.countryID;
     }
-    if (!core.isEmptyOrNull(req.body.description)) {
-        params["description"] = req.body.description;
+    if (!core.isEmptyOrNull(req.body.stateID)) {
+        params["stateID"] = req.body.stateID;
+    }
+    if (!core.isEmptyOrNull(req.body.cityID)) {
+        params["cityID"] = req.body.cityID;
+    }
+    if (!core.isEmptyOrNull(req.body.addressLine_1)) {
+        params["addressLine_1"] = req.body.addressLine_1;
+    }
+    if (!core.isEmptyOrNull(req.body.addressLine_2)) {
+        params["addressLine_2"] = req.body.addressLine_2;
     }
     if (!core.isEmptyOrNull(req.body.isActive)) {
         params["isActive"] = req.body.isActive;
@@ -106,7 +113,7 @@ exports.update = async (req, res) => {
         if (params["isPreferred"]) {
             try {
                 let user = req.user;
-                await Phone.updateMany({userID: user.id, isPreferred: true},
+                await Address.updateMany({userID: user.id, isPreferred: true},
                     {isPreferred: false});
             } catch (error) {
                 return response.errorResponse(res, 500, error.message, error.code);
@@ -116,7 +123,7 @@ exports.update = async (req, res) => {
 
     try {
         // Find user and update it with the request body
-        let updatedItem = await Phone.findOneAndUpdate({_id: params["id"]}, params, {
+        let updatedItem = await Address.findOneAndUpdate({_id: params["id"]}, params, {
             new: true,
             useFindAndModify: false,
         })
@@ -124,17 +131,17 @@ exports.update = async (req, res) => {
             return response.errorResponse(
                 res,
                 404,
-                `Phone not found with id: ${params["id"]}`,
+                `Address not found with id: ${params["id"]}`,
                 40004
             );
         }
-        response.successResponse(res, 200, [{tel: updatedItem}]);
+        response.successResponse(res, 200, [{address: updatedItem}]);
     } catch (error) {
         if (error.kind === "ObjectId") {
             return response.errorResponse(
                 res,
                 404,
-                `Phone not found with id: ${params["id"]}`,
+                `Address not found with id: ${params["id"]}`,
                 error.code,
                 error.message
             );
@@ -143,7 +150,7 @@ exports.update = async (req, res) => {
     }
 };
 
-// Delete a phone item category with the specified item Id
+// Delete an address with the specified item Id
 exports.delete = (req, res) => {
     // Validate Request
     if (
@@ -158,24 +165,24 @@ exports.delete = (req, res) => {
         params["id"] = req.body.id;
     }
 
-    Phone.findOneAndDelete({_id: params["id"]})
+    Address.findOneAndDelete({_id: params["id"]})
         .then((item) => {
             if (!item) {
                 return response.errorResponse(
                     res,
                     404,
-                    `Phone not found with id: ${params["id"]}`,
+                    `Address not found with id: ${params["id"]}`,
                     40004
                 );
             }
-            response.successResponse(res, 200, ["Phone number deleted successfully!"]);
+            response.successResponse(res, 200, ["Address deleted successfully!"]);
         })
         .catch((error) => {
             if (error.kind === "ObjectId" || error.name === "NotFound") {
                 return response.errorResponse(
                     res,
                     404,
-                    `Item not found with id: ${params["id"]} ::: ${error.message}`,
+                    `Address not found with id: ${params["id"]} ::: ${error.message}`,
                     error.code
                 );
             }

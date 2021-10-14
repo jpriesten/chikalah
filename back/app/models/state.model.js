@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const StateSchema = mongoose.Schema(
     {
         stateID: {
-            type: String,
+            type: Number,
             required: true,
             unique: true,
         },
@@ -18,14 +18,13 @@ const StateSchema = mongoose.Schema(
             trim: true,
         },
         country_code: {
-            type: String,
+            type: Number,
             ref: "Country",
             required: true,
             trim: true,
         },
         country_iso2: {
             type: String,
-            ref: "Country",
             required: true,
             trim: true,
         },

@@ -4,7 +4,7 @@ const validator = require("validator");
 const jwt = require("jsonwebtoken");
 
 const emailService = require("../services/email.service");
-const {UserType, GenderType, ProductStatus} = require("../common/enum.common");
+const {UserType, GenderType} = require("../common/enum.common");
 
 const salt = bcrypt.genSaltSync(10);
 
@@ -28,7 +28,6 @@ const UserSchema = mongoose.Schema(
         },
         sex: {
             type: String,
-            default: GenderType.Default,
             enum: GenderType,
             trim: true,
             minlength: 1,

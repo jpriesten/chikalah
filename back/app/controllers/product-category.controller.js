@@ -9,19 +9,14 @@ exports.add = async (req, res) => {
         return response.errorResponse(res, 400, "No data sent", 40000);
     }
     const productCategory = new ProductCategory(core.objectValuesToLowerCase(req.body));
-    if (!productCategory.get("name"))
-        return response.errorResponse(res, 404, "Missing required field 'name'", 40004);
-    else if (!productCategory.get("description"))
-        return response.errorResponse(res, 404, "Missing required field 'description'", 40004);
-
     try {
+        await core.verifyRequestData(productCategory);
         await productCategory.save();
         response.successResponse(res, 201, [{'message': 'Okay'}]);
     } catch (error) {
-        console.error("Error adding product category: ", error);
         if (error?.code === 11000)
-            response.errorResponse(res, 409, "Product category already exists", error.code);
-        response.errorResponse(res, 500, error.message, error.code);
+            return response.errorResponse(res, 409, "Product category already exists", error.code);
+        response.errorResponse(res, error.statusCode || 500, error.value.message, error.value.code);
     }
 };
 
@@ -32,7 +27,7 @@ exports.findAll = async (req, res) => {
         let categories = await ProductCategory.find();
 
         response.successResponse(res, 200, [
-            {categories, count: Object.keys(categories).length},
+            {count: Object.keys(categories).length, categories},
         ]);
     } catch (error) {
         response.errorResponse(res, 500, error.message, error.code);

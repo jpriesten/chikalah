@@ -8,28 +8,17 @@ exports.add = async (req, res) => {
     if (Object.keys(req.body).length === 0) {
         return response.errorResponse(res, 400, "No data sent", 40000);
     }
+    req.body.userID = req.user._id;
     const cart = new Cart(core.objectValuesToLowerCase(req.body));
-    if (!cart.get("userID"))
-        return response.errorResponse(res, 404, "Missing required field 'userID'", 40004);
-    else if (!cart.get("productID"))
-        return response.errorResponse(res, 404, "Missing required field 'productID'", 40004);
-    else if (!cart.get("productName"))
-        return response.errorResponse(res, 404, "Missing required field 'productName'", 40004);
-    else if (!cart.get("currency"))
-        return response.errorResponse(res, 404, "Missing required field 'currency'", 40004);
-    else if (!cart.get("unitPrice"))
-        return response.errorResponse(res, 404, "Missing required field 'unitPrice'", 40004);
-    else if (!cart.get("quantity"))
-        return response.errorResponse(res, 404, "Missing required field 'quantity'", 40004);
-
     try {
+        await core.verifyRequestData(cart);
         cart.set({'totalCost': getTotalCost(cart.get("unitPrice"), cart.get("quantity"))});
         let savedItem = await cart.save();
         response.successResponse(res, 201, [{item: savedItem}]);
     } catch (error) {
         if (error?.code === 11000)
-            response.errorResponse(res, 409, "Item already exists", error.code);
-        response.errorResponse(res, 500, error.message, error.code);
+            return response.errorResponse(res, 409, "Item already exists", error.code);
+        response.errorResponse(res, error.statusCode || 500, error.value.message, error.value.code);
     }
 };
 

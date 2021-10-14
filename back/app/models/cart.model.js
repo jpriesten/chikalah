@@ -5,30 +5,30 @@ const CartSchema = mongoose.Schema(
     {
         userID: {
             type: mongoose.Schema.Types.ObjectId,
-            required: true,
+            required: [true, "Missing required field 'userID'"],
             ref: "User",
         },
         productID: {
             type: mongoose.Schema.Types.ObjectId,
-            required: true,
+            required: [true, "Missing required field 'productID'"],
             unique: true,
             ref: "Product",
         },
         productName: {
-            required: true,
+            required: [true, "Missing required field 'productName'"],
             type: String,
             unique: true,
             trim: true,
         },
         currency: {
             type: String,
-            required: true,
+            required: [true, "Missing required field 'currency'"],
             default: Currencies.Cameroon,
             enum: Currencies,
             trim: true,
         },
         unitPrice: {
-            required: true,
+            required: [true, "Missing required field 'unitPrice'"],
             type: Number,
             min: 0.00,
             trim: true,

@@ -43,7 +43,7 @@ const insertCountries = function (callback) {
             countryDocument.push(entity);
         })
         countryModel.insertMany(countryDocument).then(res => {
-            console.info("Success loading countries: ", res);
+            console.info("Success loading countries");
             callback();
         }).catch(error => {
             console.error("Error loading countries: ", error.message);

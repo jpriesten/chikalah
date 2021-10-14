@@ -1,6 +1,6 @@
 module.exports = (app) => {
     const users = require("../controllers/auth.controller");
-    const authenticate = require("../middlewares/authenticator.middleware");
+    const {auth} = require("../middlewares/authenticator.middleware");
 
     // Create a new User
     app.post("/api/v1/auth/register", users.register);
@@ -12,5 +12,5 @@ module.exports = (app) => {
     app.post("/api/v1/auth/login", users.login);
 
     // Log a user out
-    app.post("/api/v1/auth/logout", authenticate, users.logout);
+    app.post("/api/v1/auth/logout", auth, users.logout);
 };

@@ -28,7 +28,8 @@ const insertCities = function (callback) {
                             let entity = {};
                             entity.cityID = city.id;
                             entity.name = city.name;
-                            entity.state_code = state.state_code;
+                            entity.state_code = state.id;
+                            entity.state_alias = state.state_code;
                             entity.country_code = data.id;
                             entity.country_iso2 = data.iso2;
                             entity.latitude = city.latitude;
@@ -41,7 +42,7 @@ const insertCities = function (callback) {
         })
         // console.info("cities data: ", cityDocument);
         cityModel.insertMany(cityDocument).then(res => {
-            console.info("Success loading cities: ", res);
+            console.info("Success loading cities");
             callback();
         }).catch(error => {
             console.error("Error loading cities: ", error.message);

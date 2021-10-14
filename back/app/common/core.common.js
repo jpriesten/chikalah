@@ -1,5 +1,6 @@
 const crypto = require("crypto-js");
 const jwt = require("jsonwebtoken");
+const {Document, Error} = require("mongoose");
 
 const salt = () => {
     return crypto.enc.Hex.parse(process.env.ENCRYPTION_SALT);
@@ -110,5 +111,25 @@ module.exports = {
         } catch (error) {
             throw new Error(error);
         }
+    },
+
+    /**
+     * Verify email verification token
+     * @param document Document to be validated,
+     */
+    verifyRequestData: (document) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let validated = await document.validate();
+                resolve(validated);
+            } catch (error) {
+                if (error.errors && Object.keys(error.errors).length !== 0) {
+                    const values = Object.values(error.errors);
+                    reject({value: values[0], statusCode: 400});
+                } else
+                    reject(error);
+            }
+        });
+
     },
 };

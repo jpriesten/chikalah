@@ -1,4 +1,3 @@
-const demography = require("../controllers/demography.controller");
 module.exports = (app) => {
     const demography = require("../controllers/demography.controller");
 

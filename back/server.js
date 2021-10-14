@@ -57,6 +57,8 @@ require("./app/routes/product-category.routes")(app);
 require("./app/routes/cart.routes")(app);
 // Phone number management routes
 require("./app/routes/phone.routes")(app);
+// Address management routes
+require("./app/routes/address.routes")(app);
 // Demographic data routes
 require("./app/routes/demography.routes")(app);
 

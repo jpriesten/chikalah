@@ -37,7 +37,7 @@ const insertStates = function (callback) {
             }
         })
         stateModel.insertMany(stateDocument).then(res => {
-            console.info("Success loading state: ", res);
+            console.info("Success loading state");
             callback();
         }).catch(error => {
             console.error("Error loading states: ", error.message);

@@ -3,14 +3,14 @@ const mongoose = require("mongoose");
 const ProductCategorySchema = mongoose.Schema(
     {
         name: {
-            required: true,
+            required: [true, "Missing required field 'name'"],
             type: String,
-            unique: [true, "Category already exists"],
+            unique: true,
             trim: true,
         },
         description: {
             type: String,
-            required: true,
+            required: [true, "Missing required field 'description'"],
             trim: true,
         },
     },

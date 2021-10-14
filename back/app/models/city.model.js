@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const CitySchema = mongoose.Schema(
     {
         cityID: {
-            type: String,
+            type: Number,
             required: true,
             unique: true,
         },
@@ -13,20 +13,24 @@ const CitySchema = mongoose.Schema(
             trim: true,
         },
         state_code: {
-            type: String,
+            type: Number,
             required: true,
             ref: "State",
             trim: true,
         },
-        country_code: {
+        state_alias: {
             type: String,
+            required: true,
+            trim: true,
+        },
+        country_code: {
+            type: Number,
             ref: "Country",
             required: true,
             trim: true,
         },
         country_iso2: {
             type: String,
-            ref: "Country",
             required: true,
             trim: true,
         },
