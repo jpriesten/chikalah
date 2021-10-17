@@ -1,6 +1,6 @@
 const crypto = require("crypto-js");
 const jwt = require("jsonwebtoken");
-const {Document, Error} = require("mongoose");
+const {Error} = require("mongoose");
 
 const salt = () => {
     return crypto.enc.Hex.parse(process.env.ENCRYPTION_SALT);
