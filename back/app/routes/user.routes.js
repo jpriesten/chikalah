@@ -1,31 +1,16 @@
 module.exports = (app) => {
-  const users = require("../controllers/user.controller.js");
-  const authenticate = require("../middlewares/authenticator.middleware");
+    const users = require("../controllers/user.controller.js");
+    const {auth} = require("../middlewares/authenticator.middleware");
 
-  // Create a new User
-  app.post("/api/v1/user/register", users.register);
+    // Retrieve all Users
+    app.get("/api/v1/users", auth, users.findAll);
 
-  // Verify new user email address
-  app.get("/api/v1/user/register/confirmEmail", users.confirmEmail);
+    // Retrieve the details of a user or Retrieve a single User with userId
+    app.get("/api/v1/user", auth, users.findOne);
 
-  // Login a user
-  app.post("/api/v1/user/login", users.login);
+    // Update a User with userId
+    app.put("/api/v1/user", auth, users.update);
 
-  // Log a user out
-  app.post("/api/v1/user/logout", authenticate, users.logout);
-
-  // Retrieve all Users
-  app.get("/api/v1/users", authenticate, users.findAll);
-
-  // Retrieve the details of a user
-  app.get("/api/v1/user", authenticate, users.findOne);
-
-  // Retrieve a single User with userId
-  app.get("/api/v1/user", authenticate, users.findOne);
-
-  // Update a User with userId
-  app.put("/api/v1/user", authenticate, users.update);
-
-  // Delete a User with userId
-  app.delete("/api/v1/user", authenticate, users.delete);
+    // Delete a User with userId
+    app.delete("/api/v1/user", auth, users.delete);
 };

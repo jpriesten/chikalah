@@ -1,0 +1,70 @@
+<nav class="navbar navbar-main navbar-expand-lg navbar-transparent navbar-light headroom headroom--top headroom--pinned"
+     id="navbar-main">
+    <div class="container">
+        <a [routerLink]="['/home']" class="navbar-brand mr-lg-5">
+            <img alt="company logo" src="./assets/img/brand/chikalah.png">
+        </a>
+        <button (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed" aria-controls="navbar_global"
+                class="navbar-toggler" type="button">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div [ngbCollapse]="isCollapsed" class="navbar-collapse collapse" id="navbar_global">
+            <div class="navbar-collapse-header">
+                <div class="row">
+                    <div class="col-6 collapse-brand">
+                        <a [routerLink]="['/home']">
+                            <img alt="company logo" src="./assets/img/brand/chikalah.png">
+                        </a>
+                    </div>
+                    <div class="col-6 collapse-close">
+                        <button (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed"
+                                aria-controls="navbar_global"
+                                class="navbar-toggler" type="button">
+                            <span></span>
+                            <span></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <ul *ngIf="currentUser" class="navbar-nav align-items-lg-center ml-lg-auto">
+                <li class="nav-item">
+                    <a [routerLink]="['/user-profile']" class="nav-link nav-link-icon"
+                       data-toggle="tooltip" title="View profile">
+                        <i class="fa fa-user"></i>
+                        <span class="nav-link-inner--text">&nbsp;{{currentUser?.user?.firstname | titlecase}}</span>
+                    </a>
+                </li>
+                <li class="nav-item d-none d-lg-block ml-lg-4">
+                    <a (click)="logout()" class="btn btn-neutral btn-icon">
+                        <span class="btn-inner--icon">
+                            <i class="fa fa-sign-out-alt mr-2"></i>
+                        </span>
+                        <span class="nav-link-inner--text">Logout</span>
+                    </a>
+                </li>
+            </ul>
+            <ul *ngIf="!currentUser" class="navbar-nav align-items-lg-center ml-lg-auto">
+                <li class="nav-item">
+                    <a [routerLink]="['/register']" class="nav-link"
+                       data-toggle="tooltip" title="Create an account">
+<!--                        <i class="fa fa-registered"></i>-->
+                        <span class="nav-link-inner--text">Join us now</span>
+                    </a>
+                </li>
+                <li class="nav-item d-none d-lg-block ml-lg-4">
+                    <a [routerLink]="['/login']" class="btn btn-neutral btn-icon">
+                        <span class="btn-inner--icon">
+                            <i class="fa fa-sign-in-alt mr-2"></i>
+                        </span>
+                        <span class="nav-link-inner--text">Login</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<ngx-loading
+        [config]="{ backdropBorderRadius: '3px', fullScreenBackdrop: true }"
+        [show]="loadingData">
+</ngx-loading>

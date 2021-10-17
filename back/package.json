@@ -1,5 +1,5 @@
 {
-  "name": "bholo",
+  "name": "chikalah-server",
   "version": "1.0.0",
   "description": "A platform to help unskilled labourers to get jobs with employers posting new unskilled jobs everyday",
   "main": "server.js",
@@ -10,14 +10,16 @@
     "dev": "nodemon server.js"
   },
   "keywords": [
-    "job",
-    "unskilled labourers",
-    "employers",
-    "one click"
+    "Period tracker",
+    "Blood",
+    "Women",
+    "one click",
+    "Chika box"
   ],
   "author": "TjeY",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.23.0",
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
     "chai": "^4.2.0",
